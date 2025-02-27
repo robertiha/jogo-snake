@@ -115,11 +115,22 @@ def game_over():
     canvas.delete(ALL)
     canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font = ('consolas', 70), text='GAMER OVER', fill='red', tag='gameover')
 
+def start_game():
+    global snake, food, score, direction
+    canvas.delete('start_button')
+    score = 0
+    direction = 'down'
+    label.config(text='Score: {}'.format(score))
+    snake = Snake()
+    food = Food()
+    next_turn(snake, food)
+
 # ******* Janela principal *******
 window = Tk()
 window.title('Snake Game')
 window.iconwindow()
 window.resizable(False, False)
+
 icone_img = PhotoImage(file='icon-snake-16.png')
 window.iconphoto(False, icone_img)
 
@@ -132,8 +143,9 @@ label.pack()
 canvas = Canvas(window, bg = BACKGROUND_COLOR, height=GAME_HEIGHT, width=GAME_WIDTH)
 canvas.pack()
 
-#centraliza a janela na tela
+
 window.update()
+# centraliza a janela na tela
 window_width = window.winfo_width()
 window_height = window.winfo_height()
 screen_width = window.winfo_screenwidth()
@@ -144,15 +156,19 @@ y = int((screen_height/2) - (window_height/2))
 
 window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
+# botao start
+start_button = Button(canvas, text='START', font=('consolas', 40), bg='green', fg='white', command=start_game)
+start_button_window = canvas.create_window(GAME_WIDTH/2, GAME_HEIGHT/2, window=start_button, tag ='start_button')
+
 # vincula as teclas à função de direção
 window.bind('<Left>', lambda event: change_direction('left'))
 window.bind('<Right>', lambda event: change_direction('right'))
 window.bind('<Up>', lambda event: change_direction('up'))
 window.bind('<Down>', lambda event: change_direction('down'))
 
-snake = Snake()
-food = Food()
-next_turn(snake, food)
+#snake = Snake()
+#food = Food()
+#next_turn(snake, food)
 
 
 window.mainloop()
